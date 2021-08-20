@@ -20,6 +20,9 @@ from studentserver import views
 
 router = routers.DefaultRouter()
 router.register('studentinfo', views.StudentinfoViewSet)
+router.register('student', views.StudentViewSet)
+router.register('examtype', views.ExamtypeViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
