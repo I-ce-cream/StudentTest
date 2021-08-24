@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <Container/>
+    <Examtype/>
   </div>
 </template>
 
 <script>
-import Container from './components/Container.vue'
+import Examtype from './components/Examtype.vue'
 
 export default {
   name: 'App',
   components: {
-    Container
+    Examtype
   }
 }
 </script>

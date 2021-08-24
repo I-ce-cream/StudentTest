@@ -12,7 +12,7 @@
         <textarea class="form-control" v-model="examTypeName" placeholder="考试类型名称"></textarea>
       </div>
       <div class="form-group">
-        <button class="btn btn-block btn-success" @click="saveExamType()">保存</button>
+        <el-button class="btn btn-block btn-success" @click="saveExamType()">保存</el-button>
       </div>
     </div>
     <!--  右边数据部分  -->
@@ -29,9 +29,9 @@
             <td>{{ item.examtype_no }}</td>
             <td>{{ item.examtype_name }}</td>
             <td>
-              <button class="btn btn-success" @click="editExamType(item)">
+              <el-button class="btn btn-success" @click="editExamType(item)">
                 <i class="fa fa-edit"></i>
-              </button>
+              </el-button>
             </td>
             <td>
               <button class="btn btn-success" @click="deleteExamType(item)">
