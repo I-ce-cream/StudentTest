@@ -1,9 +1,8 @@
-import { createApp } from 'vue'
-import ElementPlus from 'element-plus';
-import 'element-plus/lib/theme-chalk/index.css';
+import Vue from 'vue'
 import App from './App.vue'
 
-// createApp(App).mount('#app')
-const app = createApp(App)
-app.use(ElementPlus)
-app.mount('#app')
+Vue.config.productionTip = false
+
+new Vue({
+  render: h => h(App),
+}).$mount('#app')

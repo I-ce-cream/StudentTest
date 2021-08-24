@@ -8,7 +8,7 @@ class StudentInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Studentinfo
         # 指定全部使用 fields = '__all__'
-        fields = ('student_id', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class')
+        fields = ('url', 'student_id', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class')
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
@@ -16,10 +16,10 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Student
         # 指定全部使用 fields = '__all__'
-        fields = ('student_id', 'student_no')
+        fields = ('url', 'student_id', 'student_no')
 
 
 class ExamtypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Examtype
-        fields = ('examtype_no', 'examtype_name')
+        fields = ('url', 'examtype_no', 'examtype_name')
