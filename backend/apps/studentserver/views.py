@@ -4,14 +4,21 @@ from rest_framework import viewsets
 # from .serializers import StudentSerializer, StudentInfoSerializer
 from . import serializers
 from . import models
+from rest_framework.response import Response
+from rest_framework import viewsets, status
 # Create your views here.
 
 
 class StudentinfoViewSet(viewsets.ModelViewSet):
     # queryset = Studentinfo.objects.values_list('student_id', 'student_name', 'student_sex', 'student_age',
     #                                            'student_date', 'student_class')
-    queryset = models.Studentinfo.objects.all()
     serializer_class = serializers.StudentInfoSerializer
+    # 重写post方法
+    def post(self, request, *args, **kwargs):
+        print(request)
+        return Response(data=request, status=status.HTTP_200_OK)
+
+    queryset = models.Studentinfo.objects.all()
 
 
 class StudentViewSet(viewsets.ModelViewSet):

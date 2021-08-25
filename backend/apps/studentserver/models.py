@@ -155,8 +155,6 @@ class Sysdiagrams(models.Model):
 '''
 以下学生相关表
 '''
-
-
 class Course(models.Model):
     course_id = models.CharField(primary_key=True, max_length=36)
     # course_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -206,13 +204,33 @@ class Teacherinfo(models.Model):
 
 class Student(models.Model):
     # 设置单个主键
-    student_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    # student_id = models.CharField(primary_key=True, max_length=36)
+    # student_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+    student_id = models.CharField(primary_key=True, max_length=36)
     student_no = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'student'
+
+
+class Studentinfo(models.Model):
+    # student = models.ForeignKey(Student, models.DO_NOTHING, unique=True, primary_key=True)
+    # 设置primary_key 解决默认id主键的问题，这里设置primary跟数据库中本身没关联
+    # 但设置后可能无法使用migrate，没有测试  可能会将数据库中的该字段刷为主键
+    student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING, db_column='student_id', primary_key=True)
+    student_name = models.CharField(max_length=10, blank=True, null=True)
+    student_sex = models.CharField(max_length=2, blank=True, null=True)
+    student_age = models.IntegerField(blank=True, null=True)
+    student_date = models.DateField(blank=True, null=True)
+    student_class = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'studentinfo'
+
+    def save(self, *args, **kwargs):
+        instance = super(Student, self).save(*args, **kwargs)
+        return instance
 
 
 class Studentcourse(models.Model):
@@ -225,22 +243,6 @@ class Studentcourse(models.Model):
         managed = False
         db_table = 'studentCourse'
         unique_together = (('student_id', 'course_id'),)
-
-
-class Studentinfo(models.Model):
-    # student = models.ForeignKey(Student, models.DO_NOTHING, unique=True, primary_key=True)
-    # 设置primary_key 解决默认id主键的问题，这里设置primary跟数据库中本身没关联
-    # 但设置后可能无法使用migrate，没有测试  可能会将数据库中的该字段刷为主键
-    student_id = models.ForeignKey('Student', models.DO_NOTHING, db_column='student_id', primary_key=True)
-    student_name = models.CharField(max_length=10, blank=True, null=True)
-    student_sex = models.CharField(max_length=2, blank=True, null=True)
-    student_age = models.IntegerField(blank=True, null=True)
-    student_date = models.DateField(blank=True, null=True)
-    student_class = models.CharField(max_length=10, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'studentinfo'
 
 
 class Examtype(models.Model):
