@@ -12,7 +12,7 @@ class StudentInfoSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
-    student_id = serializers.UUIDField()
+    # student_id = serializers.UUIDField()
     class Meta:
         model = models.Student
         # 指定全部使用 fields = '__all__'
