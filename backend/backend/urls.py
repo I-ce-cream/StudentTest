@@ -22,6 +22,9 @@ router = routers.DefaultRouter()
 router.register('studentinfo', views.StudentinfoViewSet)
 router.register('student', views.StudentViewSet)
 router.register('examtype', views.ExamtypeViewSet)
+router.register('course', views.CourseViewSet)
+router.register('studentcourse', views.StudentcourseViewSet)
+router.register('exam', views.ExamViewSet)
 
 
 urlpatterns = [

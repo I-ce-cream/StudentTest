@@ -18,7 +18,7 @@ class StudentInfoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Studentinfo
         # 指定全部使用 fields = '__all__'
-        fields = ('url', 'student_id', 'student_no', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class')
+        fields = ('url', 'id', 'student_id', 'student_no', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class')
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,3 +33,22 @@ class ExamtypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.Examtype
         fields = ('url', 'examtype_no', 'examtype_name')
+
+
+class CourseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ('url', 'course_id', 'course_no', 'course_name')
+
+
+class StudentCourseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Studentcourse
+        fields = ('url', 'id', 'course_id', 'student_id')
+
+
+class ExamSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Exam
+        fields = ('url', 'id', 'student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type')
+

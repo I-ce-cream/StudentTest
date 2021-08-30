@@ -85,6 +85,23 @@ export const constantRoutes = [{
     ]
   },
 
+
+
+  //学生页面
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'student',
+      name: 'examtype',
+      component: () => import('@/views/student/examtype'),
+      meta: {
+        title: '考试类型',
+      }
+    }]
+  },
+
+
   //测试页面
   {
     path: '/',
@@ -98,6 +115,8 @@ export const constantRoutes = [{
       }
     }]
   },
+
+
   // 404 page must be placed at the end !!!
   {
     path: '*',

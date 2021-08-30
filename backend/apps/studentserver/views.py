@@ -34,4 +34,19 @@ class ExamtypeViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ExamtypeSerializer
 
 
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = models.Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+
+
+class StudentcourseViewSet(viewsets.ModelViewSet):
+    queryset = models.Studentcourse.objects.all()
+    serializer_class = serializers.StudentCourseSerializer
+
+
+class ExamViewSet(viewsets.ModelViewSet):
+    queryset = models.Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+
+
 

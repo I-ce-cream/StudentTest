@@ -132,7 +132,7 @@ class Exam(models.Model):
         managed = True
         db_table = 'exam'
         # 设置联合主键
-        unique_together = (('student_id', 'course_id'),)
+        unique_together = (('student_id', 'course_id', 'exam_date'),)
 
 
 
