@@ -86,22 +86,6 @@ export const constantRoutes = [{
   },
 
 
-
-  //学生页面
-  {
-    path: '/student',  //url路径
-    component: Layout,
-    children:[{
-      path: 'student',
-      name: 'examtype',
-      component: () => import('@/views/student/examtype'),
-      meta: {
-        title: '考试类型',
-      }
-    }]
-  },
-
-
   //测试页面
   {
     path: '/',
@@ -116,6 +100,72 @@ export const constantRoutes = [{
     }]
   },
 
+
+  //学生页面
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'student',
+      name: 'student',
+      component: () => import('@/views/student/student'),
+      meta: {
+        title: '学生信息',
+      }
+    }]
+  },
+
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'course',
+      name: 'course',
+      component: () => import('@/views/student/course'),
+      meta: {
+        title: '课程',
+      }
+    }]
+  },
+
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'studentcourse',
+      name: 'studentcourse',
+      component: () => import('@/views/student/studentcourse'),
+      meta: {
+        title: '选课情况',
+      }
+    }]
+  },
+
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'exam',
+      name: 'exam',
+      component: () => import('@/views/student/exam'),
+      meta: {
+        title: '考试成绩',
+      }
+    }]
+  },
+
+  {
+    path: '/student',  //url路径
+    component: Layout,
+    children:[{
+      path: 'examtype',
+      name: 'examtype',
+      component: () => import('@/views/student/examtype'),
+      meta: {
+        title: '考试类型',
+      }
+    }]
+  },
 
   // 404 page must be placed at the end !!!
   {

@@ -1,11 +1,4 @@
 <template>
-<!--  <div class="root">-->
-<!--    <el-row>-->
-
-<!--    </el-row>-->
-
-<!--  </div>-->
-
   <div class="row">
     <!--  左边编辑部分  -->
     <div class="col-md-4">
@@ -60,7 +53,7 @@ export default {
   },
   data(){
     return{
-      base_url:'http://127.0.0.1:8000/api/examtype/',
+      base_url:'http://127.0.0.1:8000/api/studentcourse/',
       examtype:null,
       url:'',
       examTypeNo:'',
