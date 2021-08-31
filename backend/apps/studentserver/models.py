@@ -18,7 +18,7 @@ class Course(models.Model):
     # course_id = models.CharField(primary_key=True, max_length=36)
     # course_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course_id = models.BigAutoField(primary_key=True)
-    course_no = models.CharField(max_length=10, blank=True, null=True)
+    course_no = models.CharField(max_length=10, blank=True, null=True, unique=True)
     course_name = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:
@@ -31,7 +31,7 @@ class Teacher(models.Model):
     teacher_id = models.BigAutoField(primary_key=True)
     # teacher_id = models.CharField(primary_key=True, max_length=36)
     # teacher_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    teacher_no = models.CharField(max_length=10, blank=True, null=True)
+    teacher_no = models.CharField(max_length=10, blank=True, null=True, unique=True)
 
     class Meta:
         managed = True
@@ -74,7 +74,7 @@ class Student(models.Model):
     # student_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     # student_id = models.CharField(primary_key=True, max_length=36)
     student_id = models.BigAutoField(primary_key=True)
-    student_no = models.CharField(max_length=10, blank=True, null=True)
+    student_no = models.CharField(max_length=10, blank=True, null=True, unique=True)
 
     class Meta:
         managed = True
@@ -111,7 +111,7 @@ class Studentcourse(models.Model):
 
 
 class Examtype(models.Model):
-    examtype_no = models.CharField(primary_key=True, max_length=10)
+    examtype_no = models.CharField(primary_key=True, max_length=10, unique=True)
     examtype_name = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:

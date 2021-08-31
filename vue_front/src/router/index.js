@@ -106,63 +106,68 @@ export const constantRoutes = [{
     path: '/student',  //url路径
     component: Layout,
     children:[{
-      path: 'student',
+      path: '',
       name: 'student',
       component: () => import('@/views/student/student'),
       meta: {
         title: '学生信息',
+        icon: 'ali-yonghu',
       }
     }]
   },
 
   {
-    path: '/student',  //url路径
+    path: '/course',  //url路径
     component: Layout,
     children:[{
-      path: 'course',
+      path: '',
       name: 'course',
       component: () => import('@/views/student/course'),
       meta: {
         title: '课程',
+        icon: 'ali-kecheng',
       }
     }]
   },
 
   {
-    path: '/student',  //url路径
+    path: '/studentcourse',  //url路径
     component: Layout,
     children:[{
-      path: 'studentcourse',
+      path: '',
       name: 'studentcourse',
       component: () => import('@/views/student/studentcourse'),
       meta: {
         title: '选课情况',
+        icon: 'ali-lianjie',
       }
     }]
   },
 
   {
-    path: '/student',  //url路径
+    path: '/exam',  //url路径
     component: Layout,
     children:[{
-      path: 'exam',
+      path: '',
       name: 'exam',
       component: () => import('@/views/student/exam'),
       meta: {
         title: '考试成绩',
+        icon: 'ali-chengji',
       }
     }]
   },
 
   {
-    path: '/student',  //url路径
+    path: '/examtype',  //url路径
     component: Layout,
     children:[{
-      path: 'examtype',
+      path: '',
       name: 'examtype',
       component: () => import('@/views/student/examtype'),
       meta: {
         title: '考试类型',
+        icon: 'ali-leixing',
       }
     }]
   },
