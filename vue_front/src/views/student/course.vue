@@ -9,6 +9,7 @@
         <el-input v-model="course_name" placeholder="课程名称" clearable></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveCourse()">保存</el-button>
+      <el-button type="primary" @click="">检索</el-button>
     </el-form>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="course_no" label="课程编号" show-overflow-tooltip></el-table-column>

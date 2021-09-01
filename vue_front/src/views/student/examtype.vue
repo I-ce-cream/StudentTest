@@ -9,6 +9,7 @@
         <el-input v-model="examTypeName" placeholder="考试类型名称" clearable></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveExamType()">保存</el-button>
+      <el-button type="primary" @click="">检索</el-button>
     </el-form>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="examtype_no" label="考试类型编号" show-overflow-tooltip></el-table-column>
