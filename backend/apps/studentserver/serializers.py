@@ -42,13 +42,21 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class StudentCourseSerializer(serializers.HyperlinkedModelSerializer):
+    student_no = serializers.CharField(source='student_id.student_no', read_only=True)
+    course_no = serializers.CharField(source='course_id.course_no', read_only=True)
+
     class Meta:
         model = models.Studentcourse
-        fields = ('url', 'id', 'course_id', 'student_id')
+        fields = ('url', 'id', 'course_id', 'student_id', 'student_no', 'course_id')
 
 
 class ExamSerializer(serializers.HyperlinkedModelSerializer):
+    student_no = serializers.CharField(source='student_id.student_no', read_only=True)
+    course_no = serializers.CharField(source='course_id.course_no', read_only=True)
+    examtype_name = serializers.CharField(source='exam_type.examtype_name', read_only=True)
+
     class Meta:
         model = models.Exam
-        fields = ('url', 'id', 'student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type')
+        fields = ('url', 'id', 'student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type', 'student_no',
+                  'course_id', 'examtype_name')
 

@@ -59,9 +59,12 @@ export default {
       // 通过url判断，为空是新建，获取到url为修改
       if (this.url == '') {
         axios.post(this.base_url, {examtype_no: this.examTypeNo, examtype_name: this.examTypeName})
-          .then(() => {
+          .then(res => {
             this.getAll();
-          });
+          },
+          err => {
+              this.$message.error("主键冲突，新建失败")
+            });
       } else {
         axios.put(this.url, {examtype_no: this.examTypeNo, examtype_name: this.examTypeName})
           .then(() => {

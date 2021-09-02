@@ -105,3 +105,5 @@ select * from course;
 select * from studentcourse;
 
 select * from exam;
+
+select * from auth_user;

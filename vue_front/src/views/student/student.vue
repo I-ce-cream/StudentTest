@@ -22,7 +22,8 @@
           <el-input v-model="student_age" placeholder="学生年龄" clearable></el-input>
         </el-form-item>
         <el-form-item label="注册日期">
-          <el-date-picker type="date" placeholder="注册日期" v-model="student_date" style="width: 200px;" clearable></el-date-picker>
+          <el-date-picker type="date" placeholder="注册日期" v-model="student_date" style="width: 200px;" clearable
+                          value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
         <el-form-item label="班级">
           <el-input v-model="student_class" placeholder="班级" clearable></el-input>
@@ -58,7 +59,8 @@ export default {
   props: {},
   data() {
     return {
-      base_url: 'http://127.0.0.1:8000/api/studentinfo/',
+      studentinfo_base_url: 'http://127.0.0.1:8000/api/studentinfo/',
+      student_base_url: 'http://127.0.0.1:8000/api/student/',
       url: '',
       student_id: '',
       student_no: '',
@@ -70,12 +72,12 @@ export default {
       pageSize: 6,
       total: 6, // task总数
       tableData: [],
-      resp: {},
+      resp: null,
     }
   },
   methods: {
     getAll() {
-      axios.get(this.base_url)
+      axios.get(this.studentinfo_base_url)
         .then(res => {
           this.tableData = res.data;
           this.url = '';
@@ -93,16 +95,32 @@ export default {
       // 新建和更新
       // 通过url判断，为空是新建，获取到url为修改
       if (this.url == '') {
-        axios.post(this.base_url, {examtype_no: this.examTypeNo, examtype_name: this.examTypeName})
-          .then(() => {
-            this.getAll();
-          });
+        axios.post(this.student_base_url, {student_no: this.student_no})
+          .then(res => {
+              this.resp = res
+              this.student_id = this.resp.data.url
+              axios.post(this.studentinfo_base_url, {
+                student_id: this.student_id, student_name: this.student_name, student_sex: this.student_sex,
+                student_age: this.student_age, student_date: this.student_date, student_class: this.student_class
+              })
+                .then(res => {
+                  this.getAll();
+                });
+            },
+            err => {
+              this.$message.error("学号已经存在，新建失败")
+            });
       } else {
-        axios.put(this.url, {student_id: this.student_id, student_name: this.student_name, student_sex: this.student_sex,
-          student_age: this.student_age, student_date: this.student_date, student_class: this.student_class})
-          .then(() => {
-            this.getAll();
-          });
+        axios.put(this.url, {
+          student_id: this.student_id, student_name: this.student_name, student_sex: this.student_sex,
+          student_age: this.student_age, student_date: this.student_date, student_class: this.student_class
+        })
+          .then(res => {
+              this.getAll();
+            },
+            err => {
+              this.$message.error("更新失败")
+            });
       }
     },
     editStudentInfo(row) {
@@ -118,7 +136,10 @@ export default {
     deleteStudentInfo(row) {
       axios.delete(row.url)
         .then(() => {
-          this.getAll();
+          axios.delete(row.student_id)
+            .then(() => {
+              this.getAll();
+            });
         });
     },
   },
