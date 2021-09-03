@@ -9,7 +9,7 @@
         <el-input v-model="course_name" placeholder="课程名称" clearable></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveCourse()">保存</el-button>
-      <el-button type="primary" @click="">检索</el-button>
+      <el-button type="primary" @click="searchCourse()">检索</el-button>
     </el-form>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="course_no" label="课程编号" show-overflow-tooltip></el-table-column>
@@ -50,6 +50,15 @@ export default {
           this.url = '';
           this.course_no = '';
           this.course_name = '';
+        });
+    },
+
+    searchCourse(){
+      var search_url = this.base_url + "?course_no=" + this.course_no + "&course_name=" + this.course_name
+      axios.get(search_url)
+        .then(res => {
+          this.tableData = res.data;
+          this.url = '';
         });
     },
 

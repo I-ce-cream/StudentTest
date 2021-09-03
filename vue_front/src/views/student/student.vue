@@ -29,7 +29,7 @@
           <el-input v-model="student_class" placeholder="班级" clearable></el-input>
         </el-form-item>
         <el-button type="primary" @click="saveStudentInfo()">保存</el-button>
-        <el-button type="primary" @click="">检索</el-button>
+        <el-button type="primary" @click="searchStudentInfo()">检索</el-button>
       </el-form>
     </el-form>
     <el-table :data="tableData" style="width: 100%">
@@ -66,8 +66,8 @@ export default {
       student_no: '',
       student_name: '',
       student_sex: '',
-      student_age: null,
-      student_date: null,
+      student_age: '',
+      student_date: '',
       student_class: '',
       pageSize: 6,
       total: 6, // task总数
@@ -89,6 +89,45 @@ export default {
           this.student_date = null;
           this.student_class = '';
         });
+    },
+
+    searchStudentInfo(){
+      var id = '';
+      var age = '';
+      var date = '';
+
+      if(this.student_age == null){ age = ''}else{ age = this.student_age };
+      if(this.student_date == null){ date = ''}else{ date = this.student_date };
+
+      if (this.student_no != ''){
+        axios.get(this.student_base_url + "?student_no=" + this.student_no)
+          .then(res => {
+            this.resp = res;
+            // if(this.resp == null){ id = ''}else{ id = this.resp.data[0].student_id };
+            id = this.resp.data[0].student_id;
+
+            var search_url = this.studentinfo_base_url + "?student_id=" + id + "&student_name=" + this.student_name +
+                            "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
+                            date + "&student_class=" + this.student_class
+            axios.get(search_url)
+              .then(res => {
+                this.tableData = res.data;
+                this.url = '';
+              });
+          })
+      }else{
+        var search_url = this.studentinfo_base_url + "?student_id=" + id + "&student_name=" + this.student_name +
+                        "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
+                        date + "&student_class=" + this.student_class
+        axios.get(search_url)
+          .then(res => {
+            this.tableData = res.data;
+            this.url = '';
+          });
+      }
+
+
+
     },
 
     saveStudentInfo() {

@@ -9,7 +9,7 @@
         <el-input v-model="examTypeName" placeholder="考试类型名称" clearable></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveExamType()">保存</el-button>
-      <el-button type="primary" @click="">检索</el-button>
+      <el-button type="primary" @click="searchExamType()">检索</el-button>
     </el-form>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="examtype_no" label="考试类型编号" show-overflow-tooltip></el-table-column>
@@ -22,6 +22,17 @@
         </div>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :hide-on-single-page="true"
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="currentPage"
+      @current-change="pageChange"
+      @prev-click="pageChange"
+      @next-click="pageChange"
+    ></el-pagination>
   </div>
 </template>
 
@@ -37,20 +48,40 @@ export default {
       url: '',
       examTypeNo: '',
       examTypeName: '',
-      pageSize: 6,
-      total: 6, // task总数
+      pageSize: 9, //每页数据条数
+      total: 0, // 总数据条数
+      currentPage: 1,//当前页数
       tableData: [],
       resp: {},
     }
   },
   methods: {
     getAll() {
-      axios.get(this.base_url)
+      axios.get(this.base_url + '?page='+this.currentPage+'&page_size='+this.pageSize)
         .then(res => {
-          this.tableData = res.data;
+          this.resp = res;
+          this.total = res.data.count;
+          this.tableData = res.data.results;
           this.url = '';
           this.examTypeNo = '';
           this.examTypeName = '';
+        });
+    },
+
+    pageChange(page){
+      this.currentPage = page;
+      this.searchExamType();
+    },
+
+    searchExamType(){
+      this.currentPage = 1;
+      var search_url = this.base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
+                        "&examtype_no=" + this.examTypeNo + "&examtype_name=" + this.examTypeName
+      axios.get(search_url)
+        .then(res => {
+          this.total = res.data.count
+          this.tableData = res.data.results;
+          this.url = '';
         });
     },
 
@@ -86,6 +117,10 @@ export default {
   },
   mounted() {
     this.getAll();
+  },
+  pageChange(page) {
+    console.log("page :", page);
+    this.getTemplateList(page);
   },
 }
 </script>

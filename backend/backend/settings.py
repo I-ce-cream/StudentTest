@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'studentserver',#新增的app
     'rest_framework',
     'corsheaders',#django-cors-headers 解决跨域
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,15 @@ DATABASES = {
         'PORT': '1433',
         'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server'},
     }
+}
+
+REST_FRAMEWORK = {
+    # 过滤 用于检索
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',
+                                'rest_framework.filters.OrderingFilter', ),
+    # 分页
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+
 }
 
 

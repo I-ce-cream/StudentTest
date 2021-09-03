@@ -19,10 +19,10 @@ from rest_framework import routers
 from studentserver import views
 
 router = routers.DefaultRouter()
-router.register('studentinfo', views.StudentinfoViewSet)
+router.register('studentinfo', views.StudentinfoViewSet, basename='studentinfo')
 router.register('student', views.StudentViewSet)
-router.register('examtype', views.ExamtypeViewSet)
-router.register('course', views.CourseViewSet)
+router.register('examtype', views.ExamtypeViewSet, basename='examtype')
+router.register('course', views.CourseViewSet, basename='course')
 router.register('studentcourse', views.StudentcourseViewSet)
 router.register('exam', views.ExamViewSet)
 
