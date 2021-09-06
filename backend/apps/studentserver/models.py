@@ -89,9 +89,10 @@ class Studentinfo(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.DO_NOTHING, db_column='student_id', unique=True)
     student_name = models.CharField(max_length=10, blank=True, null=True)
     student_sex = models.CharField(max_length=2, blank=True, null=True)
-    student_age = models.IntegerField(blank=True, null=True)
+    student_age = models.IntegerField(blank=True, null=True, default=0)
     student_date = models.DateField(blank=True, null=True)
     student_class = models.CharField(max_length=10, blank=True, null=True)
+    registration_date = models.DateField(blank=True, null=True)
 
     class Meta:
         managed = True

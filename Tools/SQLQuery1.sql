@@ -97,6 +97,8 @@ select * from examtype;
 
 select * from student;
 
+
+
 select * from studentinfo;
 
 select * from course;
@@ -107,3 +109,6 @@ select * from studentcourse;
 select * from exam;
 
 select * from auth_user;
+
+
+alter table studentinfo add registration_date date;

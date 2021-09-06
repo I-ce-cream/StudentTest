@@ -11,7 +11,7 @@
       <el-button type="primary" @click="saveExamType()">保存</el-button>
       <el-button type="primary" @click="searchExamType()">检索</el-button>
     </el-form>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" :default-sort = "{prop: 'examtype_no', order: 'asc'}">
       <el-table-column prop="examtype_no" label="考试类型编号" show-overflow-tooltip></el-table-column>
       <el-table-column prop="examtype_name" label="考试类型名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="url" v-if="false"></el-table-column>
@@ -70,11 +70,11 @@ export default {
 
     pageChange(page){
       this.currentPage = page;
-      this.searchExamType();
+      this.searchExamType(page);
     },
 
-    searchExamType(){
-      this.currentPage = 1;
+    searchExamType(page){
+      if(page == null){this.currentPage = 1};
       var search_url = this.base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
                         "&examtype_no=" + this.examTypeNo + "&examtype_name=" + this.examTypeName
       axios.get(search_url)
@@ -91,7 +91,9 @@ export default {
       if (this.url == '') {
         axios.post(this.base_url, {examtype_no: this.examTypeNo, examtype_name: this.examTypeName})
           .then(res => {
-            this.getAll();
+            this.examTypeNo = '';
+            this.examTypeName = '';
+            this.searchExamType();
           },
           err => {
               this.$message.error("主键冲突，新建失败")
@@ -99,7 +101,9 @@ export default {
       } else {
         axios.put(this.url, {examtype_no: this.examTypeNo, examtype_name: this.examTypeName})
           .then(() => {
-            this.getAll();
+            this.examTypeNo = '';
+            this.examTypeName = '';
+            this.searchExamType(this.currentPage);
           });
       }
     },
@@ -111,16 +115,17 @@ export default {
     deleteExamType(row) {
       axios.delete(row.url)
         .then(() => {
-          this.getAll();
+          this.examTypeNo = '';
+          this.examTypeName = '';
+          if((this.total - 1)/this.pageSize <= (this.currentPage - 1)){
+                this.currentPage = this.currentPage - 1;
+              }
+              this.searchExamType(this.currentPage);
         });
     },
   },
   mounted() {
-    this.getAll();
-  },
-  pageChange(page) {
-    console.log("page :", page);
-    this.getTemplateList(page);
+    this.searchExamType();
   },
 }
 </script>

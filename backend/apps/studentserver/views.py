@@ -26,7 +26,8 @@ class StudentinfoViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StudentInfoSerializer
     # 过滤器
     filter_backends = [DjangoFilterBackend, ]
-    filter_fields = ('student_id', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class', )
+    filter_fields = ('student_id', 'student_name', 'student_sex', 'student_age', 'student_date', 'student_class',
+                     'registration_date', )
     # 分页
     pagination_class = MyPage
 

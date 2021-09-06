@@ -125,7 +125,8 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           localStorage.setItem("hasLogin", true);
-          this.$router.push({ path: "/" });
+          //设置登陆成功后 读取的页面路径
+          this.$router.push({ path: "/student" });
         } else {
           console.log("验证失败");
         }

@@ -11,7 +11,7 @@
       <el-button type="primary" @click="saveCourse()">保存</el-button>
       <el-button type="primary" @click="searchCourse()">检索</el-button>
     </el-form>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" :default-sort = "{prop: 'course_no', order: 'asc'}">
       <el-table-column prop="course_no" label="课程编号" show-overflow-tooltip></el-table-column>
       <el-table-column prop="course_name" label="课程名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="url" v-if="false"></el-table-column>
@@ -22,6 +22,17 @@
         </div>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :hide-on-single-page="true"
+      background
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pageSize"
+      :current-page="currentPage"
+      @current-change="pageChange"
+      @prev-click="pageChange"
+      @next-click="pageChange"
+    ></el-pagination>
   </div>
 </template>
 
@@ -37,9 +48,11 @@ export default {
       url: '',
       course_no: '',
       course_name: '',
-      pageSize: 6,
-      total: 6, // task总数
+      pageSize: 9, //每页数据条数
+      total: 0, // 总数据条数
+      currentPage: 1,//当前页数
       tableData: [],
+      resp: {},
     }
   },
   methods: {
@@ -53,11 +66,19 @@ export default {
         });
     },
 
-    searchCourse(){
-      var search_url = this.base_url + "?course_no=" + this.course_no + "&course_name=" + this.course_name
+    pageChange(page){
+      this.currentPage = page;
+      this.searchCourse(page);
+    },
+
+    searchCourse(page){
+      if(page == null){this.currentPage = 1};
+      var search_url = this.base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
+                        "&course_no=" + this.course_no + "&course_name=" + this.course_name
       axios.get(search_url)
         .then(res => {
-          this.tableData = res.data;
+          this.total = res.data.count
+          this.tableData = res.data.results;
           this.url = '';
         });
     },
@@ -68,7 +89,9 @@ export default {
       if (this.url == '') {
         axios.post(this.base_url, {course_no: this.course_no, course_name: this.course_name})
           .then(res => {
-            this.getAll();
+            this.course_no = '';
+            this.course_name = '';
+            this.searchCourse();
           },
           err => {
               this.$message.error("主键冲突，新建失败")
@@ -76,7 +99,9 @@ export default {
       } else {
         axios.put(this.url, {course_no: this.course_no, course_name: this.course_name})
           .then(() => {
-            this.getAll();
+            this.course_no = '';
+            this.course_name = '';
+            this.searchCourse(this.currentPage);
           });
       }
     },
@@ -88,12 +113,17 @@ export default {
     deleteCourse(row) {
       axios.delete(row.url)
         .then(() => {
-          this.getAll();
+          this.course_no = '';
+          this.course_name = '';
+          if((this.total - 1)/this.pageSize <= (this.currentPage - 1)){
+            this.currentPage = this.currentPage - 1;
+          }
+          this.searchCourse(this.currentPage);
         });
     },
   },
   mounted() {
-    this.getAll();
+    this.searchCourse();
   },
 }
 </script>
