@@ -23,8 +23,8 @@ router.register('studentinfo', views.StudentinfoViewSet, basename='studentinfo')
 router.register('student', views.StudentViewSet)
 router.register('examtype', views.ExamtypeViewSet, basename='examtype')
 router.register('course', views.CourseViewSet, basename='course')
-router.register('studentcourse', views.StudentcourseViewSet)
-router.register('exam', views.ExamViewSet)
+router.register('studentcourse', views.StudentcourseViewSet, basename='studentcourse')
+router.register('exam', views.ExamViewSet, basename='exam')
 
 
 urlpatterns = [

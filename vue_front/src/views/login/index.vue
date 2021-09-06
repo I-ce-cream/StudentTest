@@ -146,7 +146,7 @@ export default {
           localStorage.setItem("hasLogin", true);
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("userInfo", JSON.stringify(res.data.userInfo));
-          this.$router.push({ path: "/" });
+          this.$router.push({ path: "/student" });
         },
         err => {
           console.log("err :", err);

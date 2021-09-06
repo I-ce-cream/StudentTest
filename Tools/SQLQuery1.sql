@@ -95,6 +95,7 @@ select * from exam;
 select * from examtype;
 
 
+
 select * from student;
 
 
@@ -112,3 +113,11 @@ select * from auth_user;
 
 
 alter table studentinfo add registration_date date;
+
+
+
+select * from student where student_id not in (select student_id from studentinfo);
+
+delete from student where student_id in (26);
+
+delete from student where student_no in ('ST010');

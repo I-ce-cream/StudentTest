@@ -102,13 +102,13 @@ class Studentinfo(models.Model):
 class Studentcourse(models.Model):
     # student = models.ForeignKey(Student, models.DO_NOTHING)
     # course = models.ForeignKey(Course, models.DO_NOTHING)
-    student_id = models.ForeignKey('Student', models.DO_NOTHING, db_column='student_id', blank=True)
+    student_id = models.ForeignKey('Student', models.DO_NOTHING, db_column='student_id', blank=True, )
     course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id', blank=True)
 
     class Meta:
         managed = True
         db_table = 'studentCourse'
-        unique_together = (('student_id', 'course_id'),)
+        unique_together = ('student_id', 'course_id', )
 
 
 class Examtype(models.Model):
@@ -133,7 +133,7 @@ class Exam(models.Model):
         managed = True
         db_table = 'exam'
         # 设置联合主键
-        unique_together = (('student_id', 'course_id', 'exam_date'),)
+        unique_together = ('student_id', 'course_id', 'exam_date', )
 
 
 

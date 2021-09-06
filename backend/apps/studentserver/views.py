@@ -80,13 +80,27 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class StudentcourseViewSet(viewsets.ModelViewSet):
-    queryset = models.Studentcourse.objects.all()
+    # queryset = models.Studentcourse.objects.all()
     serializer_class = serializers.StudentCourseSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ("course_id", "student_id")
+
+    def get_queryset(self):
+        # 排序
+        return models.Studentcourse.objects.all().order_by('course_id', 'student_id', )
 
 
 class ExamViewSet(viewsets.ModelViewSet):
-    queryset = models.Exam.objects.all()
+    # queryset = models.Exam.objects.all()
     serializer_class = serializers.ExamSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type', )
+
+    def get_queryset(self):
+        # 排序
+        return models.Exam.objects.all().order_by('student_id', 'course_id', 'exam_date', )
 
 
 
