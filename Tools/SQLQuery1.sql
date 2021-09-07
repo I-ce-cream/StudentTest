@@ -121,3 +121,21 @@ select * from student where student_id not in (select student_id from studentinf
 delete from student where student_id in (26);
 
 delete from student where student_no in ('ST010');
+
+
+
+
+if exists(select 1 from sys.views where name = 'v_student_course')
+drop view v_student_course;
+go
+create view v_student_course as
+select a.student_id,a.student_no,c.student_name,c.student_sex,c.student_age,c.student_date,c.student_class,a.course_id,a.course_name,a.course_no,
+	   (case when b.student_id is null then '-' else a.course_no end) select_course,
+	   (case when b.student_id is null then a.course_no else '-' end) unselect_course
+from (select * from student,course) a
+left join studentcourse b on a.student_id = b.student_id and a.course_id = b.course_id,
+studentinfo c
+where  a.student_id=c.student_id;
+
+
+select * from v_student_course order by student_no,unselect_course,select_course;

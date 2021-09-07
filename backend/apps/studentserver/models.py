@@ -23,7 +23,7 @@ class Course(models.Model):
 
     class Meta:
         # managed 设置为False，django不对该表更新进行管理  需更新可以删除或设置为True
-        managed = True
+        managed = False
         db_table = 'course'
 
 
@@ -34,7 +34,7 @@ class Teacher(models.Model):
     teacher_no = models.CharField(max_length=10, blank=True, null=True, unique=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'teacher'
 
 
@@ -45,7 +45,7 @@ class Teachercourse(models.Model):
     course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id', blank=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'teacherCourse'
         unique_together = (('teacher_id', 'course_id'),)
 
@@ -59,7 +59,7 @@ class Teacherinfo(models.Model):
     teacher_date = models.DateField(blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'teacherinfo'
 
 
@@ -77,7 +77,7 @@ class Student(models.Model):
     student_no = models.CharField(max_length=10, blank=True, null=True, unique=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'student'
 
 
@@ -95,7 +95,7 @@ class Studentinfo(models.Model):
     registration_date = models.DateField(blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'studentinfo'
 
 
@@ -106,7 +106,7 @@ class Studentcourse(models.Model):
     course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id', blank=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'studentCourse'
         unique_together = ('student_id', 'course_id', )
 
@@ -116,7 +116,7 @@ class Examtype(models.Model):
     examtype_name = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'examtype'
 
 
@@ -130,11 +130,28 @@ class Exam(models.Model):
     exam_type = models.ForeignKey('Examtype', models.DO_NOTHING, db_column='examtype_no', blank=True, null=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'exam'
         # 设置联合主键
         unique_together = ('student_id', 'course_id', 'exam_date', )
 
 
+class vstudentcourse(models.Model):
+    student_id = models.IntegerField(primary_key=True)
+    student_no = models.CharField(blank=True, null=True, max_length=50)
+    student_name = models.CharField(blank=True, null=True, max_length=50)
+    student_sex = models.CharField(blank=True, null=True, max_length=50)
+    student_age = models.CharField(blank=True, null=True, max_length=50)
+    student_date = models.CharField(blank=True, null=True, max_length=50)
+    student_class = models.CharField(blank=True, null=True, max_length=50)
+    course_id = models.CharField(blank=True, null=True, max_length=50)
+    course_name = models.CharField(blank=True, null=True, max_length=50)
+    course_no = models.CharField(blank=True, null=True, max_length=50)
+    select_course = models.CharField(blank=True, null=True, max_length=50)
+    unselect_course = models.CharField(blank=True, null=True, max_length=50)
 
+    class Meta:
+        managed = False
+        db_table = 'v_student_course'
+        unique_together = ('student_id', 'course_id', )
 

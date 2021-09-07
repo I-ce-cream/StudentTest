@@ -103,4 +103,17 @@ class ExamViewSet(viewsets.ModelViewSet):
         return models.Exam.objects.all().order_by('student_id', 'course_id', 'exam_date', )
 
 
+class VStudentCourseViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.vstudentcourseSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('student_no', 'course_no', 'select_course', 'unselect_course', )
+
+    pagination_class = MyPage
+
+    def get_queryset(self):
+        return models.vstudentcourse.objects.all().order_by('student_id', 'course_id', )
+
+
+
 
