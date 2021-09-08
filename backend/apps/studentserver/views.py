@@ -107,12 +107,21 @@ class VStudentCourseViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.vstudentcourseSerializer
 
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ('student_no', 'course_no', 'select_course', 'unselect_course', )
+    filter_fields = ('student_no', 'course_no', 'select_course', 'unselect_course', 'student_id', 'course_id', )
 
     pagination_class = MyPage
 
+    # 设置允许的接口
+    # http_method_names = ['get', 'post', 'head', 'options', 'put', ]
+    # GET, POST, HEAD, OPTIONS
+
     def get_queryset(self):
         return models.vstudentcourse.objects.all().order_by('student_id', 'course_id', )
+
+
+
+
+
 
 
 
