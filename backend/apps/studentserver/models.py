@@ -127,7 +127,7 @@ class Exam(models.Model):
     course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id')
     exam_date = models.DateTimeField(blank=True, null=True)
     exam_score = models.FloatField(blank=True, null=True)
-    exam_type = models.ForeignKey('Examtype', models.DO_NOTHING, db_column='examtype_no', blank=True, null=True)
+    examtype_no = models.ForeignKey('Examtype', models.DO_NOTHING, db_column='examtype_no', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -154,4 +154,23 @@ class vstudentcourse(models.Model):
         managed = False
         db_table = 'v_student_course'
         unique_together = ('student_id', 'course_id', )
+
+
+class vexam(models.Model):
+    id = models.IntegerField(primary_key=True)
+    student_id = models.ForeignKey('Student', models.DO_NOTHING, db_column='student_id')
+    student_no = models.CharField(blank=True, null=True, max_length=50)
+    student_name = models.CharField(blank=True, null=True, max_length=50)
+    course_id = models.ForeignKey('Course', models.DO_NOTHING, db_column='course_id')
+    course_no = models.CharField(blank=True, null=True, max_length=50)
+    course_name = models.CharField(blank=True, null=True, max_length=50)
+    exam_date = models.CharField(blank=True, null=True, max_length=50)
+    exam_score = models.CharField(blank=True, null=True, max_length=50)
+    examtype_no = models.CharField(blank=True, null=True, max_length=50)
+    examtype_name = models.CharField(blank=True, null=True, max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'v_exam'
+
 

@@ -139,3 +139,29 @@ where  a.student_id=c.student_id;
 
 
 select * from v_student_course order by student_no,unselect_course,select_course;
+
+
+select * from student;
+select * from studentinfo;
+select * from studentcourse;
+
+if exists(select 1 from sys.views where name = 'v_exam')
+drop view v_exam;
+go
+create view v_exam as
+select a.id,a.student_id,b.student_no,c.student_name,a.course_id,d.course_no,d.course_name,convert(varchar(100),a.exam_date,20) exam_date,a.exam_score,a.examtype_no,e.examtype_name
+from exam a
+left join student b on a.student_id = b.student_id
+left join studentinfo c on a.student_id = c.student_id
+left join course d on a.course_id = d.course_id
+left join examtype e on a.examtype_no = e.examtype_no;
+
+select * from v_exam;
+delete from exam where id = 3;
+
+insert into exam (exam_date,exam_score,course_id,examtype_no,student_id) values ('2021-09-09 09:54:00',11,2,'EXAMTYPE2',2);
+
+
+select * from exam;
+
+

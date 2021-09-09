@@ -96,7 +96,7 @@ class ExamViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ExamSerializer
 
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ('student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type', )
+    filter_fields = ('student_id', 'course_id', 'exam_date', 'exam_score', 'examtype_no', )
 
     def get_queryset(self):
         # 排序
@@ -116,7 +116,19 @@ class VStudentCourseViewSet(viewsets.ModelViewSet):
     # GET, POST, HEAD, OPTIONS
 
     def get_queryset(self):
-        return models.vstudentcourse.objects.all().order_by('student_id', 'course_id', )
+        return models.vstudentcourse.objects.all().order_by('student_no', 'course_no', )
+
+
+class VExamViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.vexamSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('student_no', 'course_no', 'student_id', 'course_id', 'exam_date', 'examtype_no', )
+
+    pagination_class = MyPage
+
+    def get_queryset(self):
+        return models.vexam.objects.all().order_by('student_no', 'course_no', 'exam_date', )
 
 
 

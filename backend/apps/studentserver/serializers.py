@@ -60,7 +60,7 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Exam
-        fields = ('url', 'id', 'student_id', 'course_id', 'exam_date', 'exam_score', 'exam_type', 'student_no',
+        fields = ('url', 'id', 'student_id', 'course_id', 'exam_date', 'exam_score', 'examtype_no', 'student_no',
                   'course_no', 'examtype_name', 'course_name', )
 
 
@@ -69,3 +69,8 @@ class vstudentcourseSerializer(serializers.ModelSerializer):
         model = models.vstudentcourse
         fields = '__all__'
 
+
+class vexamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.vexam
+        fields = '__all__'
