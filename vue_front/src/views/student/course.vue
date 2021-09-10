@@ -3,10 +3,10 @@
     <el-form label-width="100px" style="width:1000px" inline>
       <input type="hidden" v-model="url">
       <el-form-item label="课程编号">
-        <el-input v-model="course_no" placeholder="课程编号" clearable></el-input>
+        <el-input v-model="course_no" placeholder="课程编号" clearable maxlength="10"></el-input>
       </el-form-item>
       <el-form-item label="课程名称">
-        <el-input v-model="course_name" placeholder="课程名称" clearable></el-input>
+        <el-input v-model="course_name" placeholder="课程名称" clearable maxlength="10"></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveCourse()">保存</el-button>
       <el-button type="primary" @click="searchCourse()">检索</el-button>

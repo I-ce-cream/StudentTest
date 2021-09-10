@@ -23,7 +23,7 @@
       </el-form>
       <el-form :inline="true" label-position="right" label-width="68px">
         <el-form-item label="学生年龄">
-          <el-input v-model="student_age" placeholder="学生年龄" clearable></el-input>
+          <el-input v-model="student_age" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="学生年龄" clearable></el-input>
         </el-form-item>
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="生日" v-model="student_date" style="width: 200px;" clearable
