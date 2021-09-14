@@ -3,10 +3,10 @@
     <el-form label-width="100px" style="width:1000px" inline>
       <input type="hidden" v-model="url">
       <el-form-item label="考试类型编号">
-        <el-input v-model="examTypeNo" placeholder="考试类型编号" clearable></el-input>
+        <el-input v-model="examTypeNo" placeholder="考试类型编号" clearable maxlength="10"></el-input>
       </el-form-item>
       <el-form-item label="考试类型名称">
-        <el-input v-model="examTypeName" placeholder="考试类型名称" clearable></el-input>
+        <el-input v-model="examTypeName" placeholder="考试类型名称" clearable maxlength="10"></el-input>
       </el-form-item>
       <el-button type="primary" @click="saveExamType()">保存</el-button>
       <el-button type="primary" @click="searchExamType()">检索</el-button>

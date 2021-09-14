@@ -5,10 +5,10 @@
       <input type="hidden" v-model="student_id">
       <el-form :inline="true">
         <el-form-item label="学生编号">
-          <el-input v-model="student_no" placeholder="学生编号" clearable></el-input>
+          <el-input v-model="student_no" placeholder="学生编号" clearable maxlength="10"></el-input>
         </el-form-item>
         <el-form-item label="学生姓名">
-          <el-input v-model="student_name" placeholder="学生姓名" clearable></el-input>
+          <el-input v-model="student_name" placeholder="学生姓名" clearable maxlength="10"></el-input>
         </el-form-item>
         <el-form-item label="学生性别">
           <el-select v-model="student_sex" placeholder="学生性别" clearable>
@@ -23,14 +23,14 @@
       </el-form>
       <el-form :inline="true" label-position="right" label-width="68px">
         <el-form-item label="学生年龄">
-          <el-input v-model="student_age" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="学生年龄" clearable></el-input>
+          <el-input v-model="student_age" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="学生年龄" clearable maxlength="5"></el-input>
         </el-form-item>
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="生日" v-model="student_date" style="width: 200px;" clearable
                           value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
         <el-form-item label="班级">
-          <el-input v-model="student_class" placeholder="班级" clearable></el-input>
+          <el-input v-model="student_class" placeholder="班级" clearable maxlength="10"></el-input>
         </el-form-item>
         <el-button type="primary" @click="saveStudentInfo()">保存</el-button>
         <el-button type="primary" @click="searchStudentInfo()">检索</el-button>

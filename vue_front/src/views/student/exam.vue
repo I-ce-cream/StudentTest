@@ -51,7 +51,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="分数">
-        <el-input v-model="exam_score" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="分数" clearable></el-input>
+        <el-input v-model="exam_score" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="分数" clearable
+                  maxlength="3"></el-input>
       </el-form-item>
       <el-form-item label=" ">
         <el-button type="primary" @click="saveExam()">保存</el-button>
