@@ -1,6 +1,6 @@
 ﻿--django
 
-
+select * from sys.messages;
 
 --创建数据库
 --drop database SQLTEST;
@@ -64,7 +64,16 @@ go
 --create clustered index FK_exam on exam (student_id,course_id,exam_date);
 
 
+--学生信息视图
+if exists(select 1 from sys.views where name = 'v_student_info')
+drop view v_student_info
+go
+create view v_student_info as
+select a.student_id,a.student_no,b.student_name,b.student_sex,b.student_age,b.student_date,b.registration_date,b.student_class
+from student a
+left join studentinfo b on a.student_id = b.student_id;
 
+select * from v_student_info;
 
 
 --学生选课视图 同时显示已选课程和未选课程
@@ -123,24 +132,31 @@ begin
 	if exists (select 1 from student where student_no=@student_no)
 		begin
 		set @return_message='学号已经存在';
-		rollback transaction
+		rollback transaction;
 		return 0
 		end
 
-	insert into student (student_no) values (@student_no);
+	begin try
+		insert into student (student_no) values (@student_no);
 
-	declare @student_id int
-	select @student_id=student_id from student where trim(student_no)=@student_no;
+		declare @student_id int
+		select @student_id=student_id from student where trim(student_no)=@student_no;
 
-	insert into studentinfo (student_name,student_sex,student_age,student_date,student_class,student_id,registration_date)
-	values (@student_name,@student_sex,@student_age,@student_date,@student_class,@student_id,@registration_date);
+		insert into studentinfo (student_name,student_sex,student_age,student_date,student_class,student_id,registration_date)
+		values (@student_name,@student_sex,@student_age,@student_date,@student_class,@student_id,@registration_date);
 
-	commit;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
 end
 
 
 declare @rtn_str varchar(50)
-exec student_insert '123','321','男',15,'CLASS1','2020-9-1','2020-11-1',@rtn_str output;
+exec student_insert '123','321','男','abc','CLASS1','2020-9-1','2020-11-1',@rtn_str output;
 print(@rtn_str)
 
 
@@ -154,31 +170,74 @@ create proc student_update
 	@student_age	int,
 	@student_class	varchar(10),
 	@student_date	date,
-	@registration_date	date
+	@registration_date	date,
+	@return_message	varchar(50) output
 as
 begin
-	declare @student_id int
-	select @student_id=student_id from student where trim(student_no)=@student_no;
-
-	update studentinfo 
-	set student_name=@student_name,student_sex=@student_sex,student_age=@student_age,student_date=@student_date,
-					 student_class=@student_class,registration_date=@registration_date
-	where student_id=@student_id;
+	begin transaction
+	begin try
+		declare @student_id int
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+		
+		update studentinfo 
+		set student_name=@student_name,student_sex=@student_sex,student_age=@student_age,student_date=@student_date,
+						 student_class=@student_class,registration_date=@registration_date
+		where student_id=@student_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
 end
+
+
+declare @rtn_str varchar(50)
+exec student_update '999','321','男','dv','CLASS1','2020-9-1','2020-11-1',@rtn_str output;
+print(@rtn_str)
+
+select * from student;
 
 if exists(select * from sys.procedures where name='student_delete')
 drop procedure student_delete;
 go
 create proc student_delete
-	@student_no		varchar(10)
+	@student_no		varchar(10),
+	@return_message	varchar(50) output
 as
 begin
-	declare @student_id int
-	select @student_id=student_id from student where trim(student_no)=@student_no;
+	begin transaction
+	begin try
+		declare @student_id int
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
 
-	delete from studentinfo where student_id=@student_id;
-	delete from student where student_id=@student_id;
+		delete from studentinfo where student_id=@student_id;
+		delete from student where student_id=@student_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
 end
+
+declare @rtn_str varchar(50)
+exec student_delete '999',@rtn_str output;
+print(@rtn_str)
 
 
 
