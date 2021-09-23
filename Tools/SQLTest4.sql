@@ -63,7 +63,7 @@ alter table exam nocheck constraint [FK_exam_studentID],[FK_exam_courseID],[FK_e
 go
 --create clustered index FK_exam on exam (student_id,course_id,exam_date);
 
-
+------------------------------------------------------------------------------------------------------------------------------------------
 --学生信息视图
 if exists(select 1 from sys.views where name = 'v_student_info')
 drop view v_student_info
@@ -109,7 +109,7 @@ left join examtype e on a.examtype_no = e.examtype_no;
 select * from v_exam;
 
 
-
+----------------------------------------------------------------------------------------------------------
 --学生表 创建  修改  删除
 select * from student;
 select * from studentinfo;
@@ -128,15 +128,14 @@ create proc student_insert
 	@return_message	varchar(50) output
 as
 begin
-	begin transaction
-	if exists (select 1 from student where student_no=@student_no)
-		begin
-		set @return_message='学号已经存在';
-		rollback transaction;
-		return 0
-		end
-
 	begin try
+		begin transaction
+		if exists (select 1 from student where student_no=@student_no)
+			begin
+			set @return_message='学号已经存在';
+			rollback transaction;
+			return 0
+			end
 		insert into student (student_no) values (@student_no);
 
 		declare @student_id int
@@ -174,8 +173,8 @@ create proc student_update
 	@return_message	varchar(50) output
 as
 begin
-	begin transaction
 	begin try
+		begin transaction
 		declare @student_id int
 		select @student_id=student_id from student where trim(student_no)=@student_no;
 		if(@student_id is null or @student_id = '')
@@ -213,8 +212,8 @@ create proc student_delete
 	@return_message	varchar(50) output
 as
 begin
-	begin transaction
 	begin try
+		begin transaction
 		declare @student_id int
 		select @student_id=student_id from student where trim(student_no)=@student_no;
 		if(@student_id is null or @student_id = '')
@@ -236,35 +235,563 @@ begin
 end
 
 declare @rtn_str varchar(50)
-exec student_delete '999',@rtn_str output;
+exec student_delete '123',@rtn_str output;
+print(@rtn_str)
+
+
+---------------------------------------------------------------------------------------------------
+--考试类型 创建  修改   删除
+select * from examtype;
+
+if exists(select * from sys.procedures where name='examtype_insert')
+drop procedure examtype_insert;
+go
+create proc examtype_insert
+	@examtype_no	varchar(10),
+	@examtype_name	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		if exists (select 1 from examtype where examtype_no=@examtype_no)
+			begin
+			set @return_message='考试类型已经存在';
+			rollback transaction;
+			return 0
+			end
+		insert into examtype (examtype_no,examtype_name) values (@examtype_no,@examtype_name);
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+
+declare @rtn_str varchar(50)
+exec examtype_insert 'EXAMTYPE3','ddd',@rtn_str output;
+print(@rtn_str)
+
+if exists(select * from sys.procedures where name='examtype_update')
+drop procedure examtype_update;
+go
+create proc examtype_update
+	@examtype_no	varchar(10),
+	@examtype_name	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		if not exists (select 1 from examtype where examtype_no=@examtype_no)
+			begin
+			set @return_message='考试类型不存在';
+			rollback transaction;
+			return 0
+			end
+
+		update examtype set examtype_name=@examtype_name where examtype_no=@examtype_no;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+
+declare @rtn_str varchar(50)
+exec examtype_update 'EXAMTYPE3','期末考试',@rtn_str output;
+print(@rtn_str)
+
+
+if exists(select * from sys.procedures where name='examtype_delete')
+drop procedure examtype_delete;
+go
+create proc examtype_delete
+	@examtype_no	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		if not exists (select 1 from examtype where examtype_no=@examtype_no)
+			begin
+			set @return_message='考试类型不存在';
+			rollback transaction;
+			return 0
+			end
+
+		delete from examtype where examtype_no=@examtype_no;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+declare @rtn_str varchar(50)
+exec examtype_delete 'EXAMTYPE3',@rtn_str output;
 print(@rtn_str)
 
 
 
---考试类型 创建  修改   删除
-
-
-
-
-
-
-
+------------------------------------------------------------------------------------------------------------------
 --课程 创建  修改  删除
+select * from course;
+
+if exists(select * from sys.procedures where name='course_insert')
+drop procedure course_insert;
+go
+create proc course_insert
+	@course_no		varchar(10),
+	@course_name	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		if exists (select 1 from course where course_no=@course_no)
+			begin
+			set @return_message='课程号已经存在';
+			rollback transaction;
+			return 0
+			end
+		insert into course (course_no,course_name) values (@course_no,@course_name);
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+
+declare @rtn_str varchar(50)
+exec course_insert 'C07','ddd',@rtn_str output;
+print(@rtn_str)
+
+if exists(select * from sys.procedures where name='course_update')
+drop procedure course_update;
+go
+create proc course_update
+	@course_no		varchar(10),
+	@course_name	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		declare @course_id int
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		update course set course_name=@course_name where course_id=@course_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+
+declare @rtn_str varchar(50)
+exec course_update 'C07','asd',@rtn_str output;
+print(@rtn_str)
+
+
+if exists(select * from sys.procedures where name='course_delete')
+drop procedure course_delete;
+go
+create proc course_delete
+	@course_no		varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		declare @course_id int
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		delete from course where course_id=@course_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+declare @rtn_str varchar(50)
+exec course_delete 'C07',@rtn_str output;
+print(@rtn_str)
 
 
 
-
-
+--------------------------------------------------------------------------------------------------------------------
 --学生课程关联表 创建 删除
+select * from studentcourse;
+
+if exists(select * from sys.procedures where name='studentcourse_insert')
+drop procedure studentcourse_insert;
+go
+create proc studentcourse_insert
+	@student_no		varchar(10),
+	@course_no		varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+
+		declare @course_id int,
+				@student_id int
+
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		if exists (select 1 from studentcourse where course_id=@course_id and student_id=@student_id)
+			begin
+			set @return_message='选课关系已经存在';
+			rollback transaction;
+			return 0
+			end
+
+		insert into studentcourse (course_id,student_id) values (@course_id,@student_id);
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from v_student_course;
+
+declare @rtn_str varchar(50)
+exec studentcourse_insert 'ST001','C04',@rtn_str output;
+print(@rtn_str)
 
 
 
 
+if exists(select * from sys.procedures where name='studentcourse_delete')
+drop procedure studentcourse_delete;
+go
+create proc studentcourse_delete
+	@student_no		varchar(10),
+	@course_no		varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		
+		declare @course_id int,
+				@student_id int,
+				@studentcourse_id int
+
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+		
+		select @studentcourse_id=id from studentcourse where course_id=@course_id and student_id=@student_id;
+		if(@studentcourse_id is null or @studentcourse_id = '')
+			begin
+			set @return_message='选课关系不存在';
+			rollback transaction;
+			return 0
+			end
+
+		delete from studentcourse where id=@studentcourse_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from v_student_course where student_no='ST001';
+
+declare @rtn_str varchar(50)
+exec studentcourse_delete 'ST001','C02',@rtn_str output;
+print(@rtn_str)
 
 
-
+--------------------------------------------------------------------------------------------------------------------
 --成绩表 创建 修改  删除
+select * from v_exam;
+select * from exam;
 
+
+if exists(select * from sys.procedures where name='exam_insert')
+drop procedure exam_insert;
+go
+create proc exam_insert
+	@student_no		varchar(10),
+	@course_no		varchar(10),
+	@exam_date		datetime,
+	@exam_score		float,
+	@examtype_no	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+
+		declare @course_id int,
+				@student_id int
+
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end	
+
+		if not exists (select 1 from studentcourse where course_id=@course_id and student_id=@student_id)
+			begin
+			set @return_message='选课关系不存在';
+			rollback transaction;
+			return 0
+			end
+
+		if exists (select 1 from exam where course_id=@course_id and student_id=@student_id and exam_date=@exam_date)
+			begin
+			set @return_message='考试记录已经存在';
+			rollback transaction;
+			return 0
+			end
+
+		if not exists (select 1 from examtype where examtype_no=@examtype_no)
+			begin
+			set @return_message='考试类型不存在';
+			rollback transaction;
+			return 0
+			end
+
+		insert into exam (student_id,course_id,exam_date,exam_score,examtype_no) 
+		values (@student_id,@course_id,@exam_date,@exam_score,@examtype_no);
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from examtype;
+select * from v_exam;
+
+declare @rtn_str varchar(50)
+exec exam_insert 'ST001','C03','2021-9-24 14:36:00',52.3,'EXAMTYPE4',@rtn_str output;
+print(@rtn_str)
+
+
+
+if exists(select * from sys.procedures where name='exam_update')
+drop procedure exam_update;
+go
+create proc exam_update
+	@student_no		varchar(10),
+	@course_no		varchar(10),
+	@exam_date		datetime,
+	@exam_score		float,
+	@examtype_no	varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+
+		declare @course_id int,
+				@student_id int,
+				@exam_id int
+
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end	
+
+		if not exists (select 1 from studentcourse where course_id=@course_id and student_id=@student_id)
+			begin
+			set @return_message='选课关系不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @exam_id=id from exam where course_id=@course_id and student_id=@student_id and exam_date=@exam_date;
+		if(@exam_id is null or @exam_id = '')
+			begin
+			set @return_message='考试记录不存在';
+			rollback transaction;
+			return 0
+			end
+
+		if not exists (select 1 from examtype where examtype_no=@examtype_no)
+			begin
+			set @return_message='考试类型不存在';
+			rollback transaction;
+			return 0
+			end
+
+		update exam 
+		set exam_score=@exam_score,examtype_no=@examtype_no
+		where id=@exam_id
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from examtype;
+select * from exam;
+select * from v_exam where student_no='ST001';
+
+
+declare @rtn_str varchar(50)
+exec exam_update 'ST001','C03','2021-9-23 14:36:00',70,'EXAMTYPE2',@rtn_str output;
+print(@rtn_str)
+
+
+
+if exists(select * from sys.procedures where name='exam_delete')
+drop procedure exam_delete;
+go
+create proc exam_delete
+	@student_no		varchar(10),
+	@course_no		varchar(10),
+	@exam_date		datetime,
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+
+		declare @course_id int,
+				@student_id int,
+				@exam_id int
+
+		select @student_id=student_id from student where trim(student_no)=@student_no;
+		if(@student_id is null or @student_id = '')
+			begin
+			set @return_message='学号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @course_id=course_id from course where course_no=@course_no;
+		if(@course_id is null or @course_id = '')
+			begin
+			set @return_message='课程号不存在';
+			rollback transaction;
+			return 0
+			end	
+
+		if not exists (select 1 from studentcourse where course_id=@course_id and student_id=@student_id)
+			begin
+			set @return_message='选课关系不存在';
+			rollback transaction;
+			return 0
+			end
+
+		select @exam_id=id from exam where course_id=@course_id and student_id=@student_id and exam_date=@exam_date;
+		if(@exam_id is null or @exam_id = '')
+			begin
+			set @return_message='考试记录不存在';
+			rollback transaction;
+			return 0
+			end
+
+		delete from exam where id=@exam_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from v_exam where student_no='ST001';
+
+
+declare @rtn_str varchar(50)
+exec exam_delete 'ST001','C03','2021-9-23 14:36:00',@rtn_str output;
+print(@rtn_str)
 
 
 
