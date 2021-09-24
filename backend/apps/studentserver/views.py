@@ -33,7 +33,8 @@ class StudentinfoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # 排序
-        return models.Studentinfo.objects.all().order_by('student_id', )
+        # return models.Studentinfo.objects.all().order_by('student_id', )
+        return models.Studentinfo.objects.all()
 
     # 重写post方法
     # def post(self, request, *args, **kwargs):
