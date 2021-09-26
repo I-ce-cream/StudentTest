@@ -74,3 +74,9 @@ class vexamSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.vexam
         fields = '__all__'
+
+
+class vstudentinfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.vstudentinfo
+        fields = '__all__'

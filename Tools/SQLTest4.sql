@@ -109,6 +109,17 @@ left join examtype e on a.examtype_no = e.examtype_no;
 select * from v_exam;
 
 
+
+--教师信息视图
+if exists(select 1 from sys.views where name = 'v_teacher_info')
+drop view v_teacher_info
+go
+create view v_teacher_info as
+select a.teacher_id,a.teacher_no,b.teacher_name,b.teacher_sex,b.teacher_age,b.teacher_date
+from teacher a
+left join teacherinfo b on a.teacher_id = b.teacher_id;
+
+select * from v_teacher_info;
 ----------------------------------------------------------------------------------------------------------
 --学生表 创建  修改  删除
 select * from student;
@@ -792,6 +803,134 @@ select * from v_exam where student_no='ST001';
 declare @rtn_str varchar(50)
 exec exam_delete 'ST001','C03','2021-9-23 14:36:00',@rtn_str output;
 print(@rtn_str)
+
+
+
+----------------------------------------------------------------------------------------------------------
+--教师表 创建  修改  删除
+select * from teacher;
+select * from teacherinfo;
+
+if exists(select * from sys.procedures where name='teacher_insert')
+drop procedure teacher_insert;
+go
+create proc teacher_insert
+	@teacher_no		varchar(10),
+	@teacher_name	varchar(10),
+	@teacher_sex	varchar(2),
+	@teacher_age	int,
+	@teacher_date	date,
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		if exists (select 1 from teacher where teacher_no=@teacher_no)
+			begin
+			set @return_message='教师号已经存在';
+			rollback transaction;
+			return 0
+			end
+		insert into teacher (teacher_no) values (@teacher_no);
+
+		declare @teacher_id int
+		select @teacher_id=teacher_id from teacher where trim(teacher_no)=@teacher_no;
+
+		insert into teacherinfo (teacher_name,teacher_sex,teacher_age,teacher_date,teacher_id)
+		values (@teacher_name,@teacher_sex,@teacher_age,@teacher_date,@teacher_id);
+
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+select * from v_teacher_info;
+declare @rtn_str varchar(50)
+exec teacher_insert 'T003','李芳','女',12,'2020-11-1',@rtn_str output;
+print(@rtn_str)
+
+
+if exists(select * from sys.procedures where name='teacher_update')
+drop procedure teacher_update;
+go
+create proc teacher_update
+	@teacher_no		varchar(10),
+	@teacher_name	varchar(10),
+	@teacher_sex	varchar(2),
+	@teacher_age	int,
+	@teacher_date	date,
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		declare @teacher_id int
+		select @teacher_id=teacher_id from teacher where trim(teacher_no)=@teacher_no;
+		if(@teacher_id is null or @teacher_id = '')
+			begin
+			set @return_message='教师号不存在';
+			rollback transaction;
+			return 0
+			end
+		
+		update teacherinfo 
+		set teacher_name=@teacher_name,teacher_sex=@teacher_sex,teacher_age=@teacher_age,teacher_date=@teacher_date
+		where teacher_id=@teacher_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+
+declare @rtn_str varchar(50)
+exec teacher_update 'T001','李芳','女',35,'2020-11-1',@rtn_str output;
+print(@rtn_str)
+
+select * from v_teacher_info;
+
+if exists(select * from sys.procedures where name='teacher_delete')
+drop procedure teacher_delete;
+go
+create proc teacher_delete
+	@teacher_no		varchar(10),
+	@return_message	varchar(50) output
+as
+begin
+	begin try
+		begin transaction
+		declare @teacher_id int
+		select @teacher_id=teacher_id from teacher where trim(teacher_no)=@teacher_no;
+		if(@teacher_id is null or @teacher_id = '')
+			begin
+			set @return_message='教师号不存在';
+			rollback transaction;
+			return 0
+			end
+
+		delete from teacherinfo where teacher_id=@teacher_id;
+		delete from teacher where teacher_id=@teacher_id;
+		commit;
+	end try
+	begin catch
+		rollback transaction;
+		set @return_message=ERROR_MESSAGE();
+		return ERROR_STATE()
+	end catch
+end
+
+declare @rtn_str varchar(50)
+exec teacher_delete 'T003',@rtn_str output;
+print(@rtn_str)
+
+select * from v_teacher_info;
 
 
 

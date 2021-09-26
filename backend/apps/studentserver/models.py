@@ -174,3 +174,17 @@ class vexam(models.Model):
         db_table = 'v_exam'
 
 
+class vstudentinfo(models.Model):
+    student_id = models.IntegerField(primary_key=True)
+    student_no = models.CharField(blank=True, null=True, max_length=50)
+    student_name = models.CharField(blank=True, null=True, max_length=50)
+    student_sex = models.CharField(blank=True, null=True, max_length=50)
+    student_age = models.CharField(blank=True, null=True, max_length=50)
+    student_date = models.CharField(blank=True, null=True, max_length=50)
+    student_class = models.CharField(blank=True, null=True, max_length=50)
+    registration_date = models.CharField(blank=True, null=True, max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'v_student_info'
+

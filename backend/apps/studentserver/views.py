@@ -132,6 +132,19 @@ class VExamViewSet(viewsets.ModelViewSet):
         return models.vexam.objects.all().order_by('student_no', 'course_no', 'exam_date', )
 
 
+class VStudentInfoViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.vstudentinfoSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('student_id', 'student_no', 'student_name', 'student_sex', 'student_age', 'student_date',
+                     'student_class', 'registration_date', )
+
+    pagination_class = MyPage
+
+    def get_queryset(self):
+        return models.vstudentinfo.objects.all().order_by('student_no', )
+
+
 
 
 

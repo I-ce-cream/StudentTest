@@ -77,6 +77,7 @@ export default {
     return {
       studentinfo_base_url: 'http://127.0.0.1:8000/api/studentinfo/',
       student_base_url: 'http://127.0.0.1:8000/api/student/',
+      vstudentinfo_url: 'http://127.0.0.1:8000/api/vstudentinfo/',
       url: '',
       student_id: '',
       student_no: '',

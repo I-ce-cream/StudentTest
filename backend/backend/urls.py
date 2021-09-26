@@ -27,6 +27,8 @@ router.register('studentcourse', views.StudentcourseViewSet, basename='studentco
 router.register('exam', views.ExamViewSet, basename='exam')
 router.register('vstudentcourse', views.VStudentCourseViewSet, basename='vstudentcourse')
 router.register('vexam', views.VExamViewSet, basename='vexam')
+router.register('vstudentinfo', views.VStudentInfoViewSet, basename='vexam')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
