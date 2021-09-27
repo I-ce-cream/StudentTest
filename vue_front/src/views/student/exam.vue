@@ -129,6 +129,17 @@ export default {
   },
   methods: {
     pageChange(page){
+      if(this.id != ''){
+        this.id = '';
+        this.student_id = '';
+        this.course_id = '';
+        this.student_no = '';
+        this.course_no = '';
+        this.examtype_no = '';
+        this.exam_date = '';
+        this.exam_score = '';
+      }
+
       this.currentPage = page;
       this.searchExam(page);
     },

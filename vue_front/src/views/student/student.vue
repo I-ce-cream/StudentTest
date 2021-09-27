@@ -2,6 +2,7 @@
   <div class="root">
     <el-form label-width="100px" style="width:2000px">
       <input type="hidden" v-model="url">
+      <input type="hidden" v-model="id">
       <input type="hidden" v-model="student_id">
       <el-form :inline="true">
         <el-form-item label="学生编号">
@@ -37,7 +38,7 @@
       </el-form>
     </el-form>
     <el-table :data="tableData" style="width: 100%" :default-sort = "{prop: 'student_no', order: 'asc'}">
-      <el-table-column prop="url" v-if="false"></el-table-column>
+      <el-table-column prop="id" v-if="false"></el-table-column>
       <el-table-column prop="student_id" v-if="false"></el-table-column>
       <el-table-column prop="student_no" label="编号" show-overflow-tooltip></el-table-column>
       <el-table-column prop="student_name" label="姓名" show-overflow-tooltip></el-table-column>
@@ -79,6 +80,7 @@ export default {
       student_base_url: 'http://127.0.0.1:8000/api/student/',
       vstudentinfo_url: 'http://127.0.0.1:8000/api/vstudentinfo/',
       url: '',
+      id: '',
       student_id: '',
       student_no: '',
       student_name: '',
@@ -95,22 +97,34 @@ export default {
     }
   },
   methods: {
-    getAll() {
-      axios.get(this.studentinfo_base_url)
-        .then(res => {
-          this.tableData = res.data;
-          this.url = '';
-          this.student_id = '';
-          this.student_no = '';
-          this.student_name = '';
-          this.student_sex = '';
-          this.student_age = null;
-          this.student_date = null;
-          this.student_class = '';
-        });
-    },
+    // getAll() {
+    //   axios.get(this.studentinfo_base_url)
+    //     .then(res => {
+    //       this.tableData = res.data;
+    //       this.url = '';
+    //       this.student_id = '';
+    //       this.student_no = '';
+    //       this.student_name = '';
+    //       this.student_sex = '';
+    //       this.student_age = null;
+    //       this.student_date = null;
+    //       this.student_class = '';
+    //     });
+    // },
 
     pageChange(page){
+      if(this.id != ''){
+        this.id = '';
+        this.student_id = '';
+        this.student_no = '';
+        this.student_name = '';
+        this.student_sex = '';
+        this.student_age = null;
+        this.student_date = null;
+        this.registration_date = null;
+        this.student_class = '';
+      }
+
       this.currentPage = page;
       this.searchStudentInfo(page);
     },
@@ -126,45 +140,58 @@ export default {
       if(this.student_date == null){ date = ''}else{ date = this.student_date };
       if(this.registration_date == null){ reg_date = ''}else{ reg_date = this.registration_date};
 
-      if (this.student_no != ''){
-        axios.get(this.student_base_url + "?student_no=" + this.student_no)
-          .then(res => {
-            this.resp = res;
-            // if(this.resp == null){ id = ''}else{ id = this.resp.data[0].student_id };
-            id = this.resp.data[0].student_id;
-
-            var search_url = this.studentinfo_base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
-                            "&student_id=" + id + "&student_name=" + this.student_name +
-                            "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
-                            date + "&student_class=" + this.student_class + "&registration_date=" + reg_date
-            axios.get(search_url)
-              .then(res => {
-                this.total = res.data.count
-                this.tableData = res.data.results;
-                this.url = '';
-              });
-          })
-      }else{
-        var search_url = this.studentinfo_base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
-                        "&student_id=" + id + "&student_name=" + this.student_name +
+      // if (this.student_no != ''){
+      //   axios.get(this.student_base_url + "?student_no=" + this.student_no)
+      //     .then(res => {
+      //       this.resp = res;
+      //       // if(this.resp == null){ id = ''}else{ id = this.resp.data[0].student_id };
+      //       id = this.resp.data[0].student_id;
+      //
+      //       var search_url = this.studentinfo_base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
+      //                       "&student_id=" + id + "&student_name=" + this.student_name +
+      //                       "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
+      //                       date + "&student_class=" + this.student_class + "&registration_date=" + reg_date
+      //       axios.get(search_url)
+      //         .then(res => {
+      //           this.total = res.data.count
+      //           this.tableData = res.data.results;
+      //           this.url = '';
+      //         });
+      //     })
+      // }else{
+      //   var search_url = this.studentinfo_base_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
+      //                   "&student_id=" + id + "&student_name=" + this.student_name +
+      //                   "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
+      //                   date + "&student_class=" + this.student_class + "&registration_date=" + reg_date
+      //   axios.get(search_url)
+      //     .then(res => {
+      //       this.total = res.data.count
+      //       this.tableData = res.data.results;
+      //       this.url = '';
+      //     });
+      // }
+      var search_url = this.vstudentinfo_url + '?page='+this.currentPage+'&page_size='+this.pageSize+
+                        "&student_id=" + id + "&student_no=" + this.student_no + "&student_name=" + this.student_name +
                         "&student_sex=" + this.student_sex + "&student_age=" + age + "&student_date=" +
                         date + "&student_class=" + this.student_class + "&registration_date=" + reg_date
-        axios.get(search_url)
-          .then(res => {
-            this.total = res.data.count
-            this.tableData = res.data.results;
-            this.url = '';
-          });
-      }
-
-
-
+      axios.get(search_url)
+        .then(res => {
+          this.total = res.data.count
+          this.tableData = res.data.results;
+          this.url = '';
+          this.id = '';
+        });
     },
 
     saveStudentInfo() {
+      if (this.student_no == null || this.student_no == ''){
+        this.$message.error("学号不能为空")
+        return
+      }
+
       // 新建和更新
       // 通过url判断，为空是新建，获取到url为修改
-      if (this.url == '') {
+      if (this.id == '') {
         axios.post(this.student_base_url, {student_no: this.student_no})
           .then(res => {
               this.resp = res
@@ -190,8 +217,8 @@ export default {
               this.$message.error("学号已经存在，新建失败")
             });
       } else {
-        axios.put(this.url, {
-          student_id: this.student_id, student_name: this.student_name, student_sex: this.student_sex,
+        axios.put(this.studentinfo_base_url+this.id+'/', {
+          student_id: this.student_base_url+this.student_id+"/", student_name: this.student_name, student_sex: this.student_sex,
           student_age: this.student_age, student_date: this.student_date, student_class: this.student_class,
           registration_date: this.registration_date,
         })
@@ -212,7 +239,8 @@ export default {
       }
     },
     editStudentInfo(row) {
-      this.url = row.url;
+      //this.url = row.url;
+      this.id = row.id;
       this.student_id = row.student_id;
       this.student_no = row.student_no;
       this.student_name = row.student_name;
@@ -223,9 +251,9 @@ export default {
       this.registration_date = row.registration_date;
     },
     deleteStudentInfo(row) {
-      axios.delete(row.url)
+      axios.delete(this.studentinfo_base_url+row.id+'/')
         .then(() => {
-          axios.delete(row.student_id)
+          axios.delete(this.student_base_url+row.student_id+'/')
             .then(() => {
               this.student_id = '';
               this.student_no = '';

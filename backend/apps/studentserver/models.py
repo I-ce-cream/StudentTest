@@ -175,7 +175,8 @@ class vexam(models.Model):
 
 
 class vstudentinfo(models.Model):
-    student_id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
+    student_id = models.IntegerField(blank=True, null=True)
     student_no = models.CharField(blank=True, null=True, max_length=50)
     student_name = models.CharField(blank=True, null=True, max_length=50)
     student_sex = models.CharField(blank=True, null=True, max_length=50)

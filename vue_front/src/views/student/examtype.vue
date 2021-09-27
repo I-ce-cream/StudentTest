@@ -69,6 +69,11 @@ export default {
     },
 
     pageChange(page){
+      if(this.url != ''){
+        this.examTypeNo = '';
+        this.examTypeName = '';
+      }
+
       this.currentPage = page;
       this.searchExamType(page);
     },

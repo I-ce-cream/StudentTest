@@ -28,7 +28,7 @@
       <el-radio v-model="radio" label="0">全部</el-radio>
       <el-radio v-model="radio" label="1">已选课程</el-radio>
       <el-radio v-model="radio" label="2">未选课程</el-radio>
-      <el-button type="primary" @click="saveStudentCourse()">保存</el-button>
+<!--      <el-button type="primary" @click="saveStudentCourse()">保存</el-button>-->
       <el-button type="primary" @click="searchStudentCourse()">检索</el-button>
     </el-form>
     <el-table :data="tableData" style="width: 100%" :row-style="{height:'68px'}" :default-sort = "{prop: 'student_no', order: 'asc'}">
@@ -43,6 +43,8 @@
       <el-table-column prop="url" v-if="false"></el-table-column>
       <el-table-column label="操作" align="right">
         <div slot-scope="scope">
+          <el-button type="primary" icon="el-icon-check" @click="saveStudentCourse(scope.row)"
+                     v-if="scope.row.select_course=='-'"></el-button>
           <el-button type="primary" icon="el-icon-delete" @click="deleteStudentCourse(scope.row)"
                      v-if="scope.row.unselect_course=='-'"></el-button>
         </div>
@@ -139,20 +141,19 @@ export default {
         });
     },
 
-    async saveStudentCourse() {
-      var res_student = await axios.get(this.student_url+'?page=1&page_size=10&student_no='+this.student_no)
-      var res_course = await axios.get(this.course_url+'?page=1&page_size=10&course_no='+this.course_no)
-      this.student_id = res_student.data[0].url
-      this.course_id = res_course.data.results[0].url
-
+    async saveStudentCourse(row) {
+      // var res_student = await axios.get(this.student_url+'?page=1&page_size=10&student_no='+this.student_no)
+      // var res_course = await axios.get(this.course_url+'?page=1&page_size=10&course_no='+this.course_no)
+      // this.student_id = res_student.data[0].url
+      // this.course_id = res_course.data.results[0].url
+      this.student_id = this.student_url+row.student_id+'/'
+      this.course_id = this.course_url+row.course_id+'/'
       await axios.post(this.studentcourse_url, {student_id:this.student_id, course_id:this.course_id, })
         .then(res=>{
-          this.student_no = '';
-          this.course_no = '';
-          this.student_id = '';
-          this.course_id = '';
-          this.radio = '0';
-          this.searchStudentCourse();
+          if((this.total - 1)/this.pageSize <= (this.currentPage - 1)){
+            this.currentPage = this.currentPage - 1;
+          }
+          this.searchStudentCourse(this.currentPage);
         },
         err => {
           this.$message.error("主键冲突，更新失败")
@@ -165,9 +166,9 @@ export default {
       await axios.delete(url)
         .then(() => {
           if((this.total - 1)/this.pageSize <= (this.currentPage - 1)){
-                this.currentPage = this.currentPage - 1;
-              }
-              this.searchStudentCourse(this.currentPage);
+            this.currentPage = this.currentPage - 1;
+          }
+          this.searchStudentCourse(this.currentPage);
         });
     },
   },

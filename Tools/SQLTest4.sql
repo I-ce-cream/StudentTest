@@ -69,7 +69,7 @@ if exists(select 1 from sys.views where name = 'v_student_info')
 drop view v_student_info
 go
 create view v_student_info as
-select a.student_id,a.student_no,b.student_name,b.student_sex,b.student_age,b.student_date,b.registration_date,b.student_class
+select a.student_id,a.student_no,b.student_name,b.student_sex,b.student_age,b.student_date,b.registration_date,b.student_class,b.id
 from student a
 left join studentinfo b on a.student_id = b.student_id;
 

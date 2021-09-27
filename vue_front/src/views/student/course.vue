@@ -67,6 +67,11 @@ export default {
     },
 
     pageChange(page){
+      if(this.url != ''){
+        this.course_no = '';
+        this.course_name = '';
+      }
+
       this.currentPage = page;
       this.searchCourse(page);
     },
