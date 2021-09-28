@@ -44,9 +44,9 @@
       <el-table-column label="操作" align="right">
         <div slot-scope="scope">
           <el-button type="primary" icon="el-icon-check" @click="saveStudentCourse(scope.row)"
-                     v-if="scope.row.select_course=='-'"></el-button>
-          <el-button type="primary" icon="el-icon-delete" @click="deleteStudentCourse(scope.row)"
-                     v-if="scope.row.unselect_course=='-'"></el-button>
+                     v-show="scope.row.select_course=='-'"></el-button>
+          <el-button type="danger" icon="el-icon-delete" @click="deleteStudentCourse(scope.row)"
+                     v-show="scope.row.unselect_course=='-'"></el-button>
         </div>
       </el-table-column>
     </el-table>
